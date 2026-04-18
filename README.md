@@ -14,7 +14,7 @@ A web app built with HTML, JavaScript, and Python (Flask) that checks password s
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-username/password-checker.git
+git clone https://github.com/chhinhlongdev/password-checker.git
 cd password-checker
 
 # Create a virtual environment (optional but recommended)
