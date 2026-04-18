@@ -1,0 +1,132 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a2e;
+  font-family: 'Segoe UI', sans-serif;
+  color: #eee;
+}
+
+.card {
+  background: #16213e;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+h1 {
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #a29bfe;
+}
+
+.input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+input[type="password"], input[type="text"] {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #0f3460;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus { border-color: #a29bfe; }
+
+button {
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  border: none;
+  background: #a29bfe;
+  color: #1a1a2e;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover { background: #7c6fe0; color: #fff; }
+
+.meter-wrap {
+  height: 10px;
+  background: #333;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.meter-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 6px;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.strength-label {
+  text-align: right;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.issues, .suggestions {
+  background: #0f3460;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.issues { border-left: 3px solid #e74c3c; }
+.suggestions { border-left: 3px solid #f39c12; }
+
+ul { padding-left: 1.2rem; }
+
+.hash-section, .suggest-section {
+  background: #0f3460;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  word-break: break-all;
+}
+
+.hash-label, .suggest-label {
+  font-size: 0.78rem;
+  color: #a29bfe;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+code {
+  color: #81ecec;
+  font-family: monospace;
+}
+
+.suggest-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.suggest-row button {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.hidden { display: none; }

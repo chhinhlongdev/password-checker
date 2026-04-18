@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Password Strength Checker</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="card">
+    <h1>Password Strength Checker</h1>
+
+    <div class="input-group">
+      <input type="password" id="password" placeholder="Enter your password" autocomplete="off" />
+      <button id="toggleBtn" aria-label="Toggle password visibility">👁</button>
+    </div>
+
+    <div class="meter-wrap" aria-label="Password strength meter">
+      <div class="meter-bar" id="meterBar"></div>
+    </div>
+    <p class="strength-label" id="strengthLabel">—</p>
+
+    <div id="issues" class="issues hidden"></div>
+    <div id="suggestions" class="suggestions hidden"></div>
+
+    <div class="hash-section hidden" id="hashSection">
+      <p class="hash-label">SHA-256 Hash:</p>
+      <code id="hashValue"></code>
+    </div>
+
+    <div class="suggest-section hidden" id="suggestSection">
+      <p class="suggest-label">Suggested strong password:</p>
+      <div class="suggest-row">
+        <code id="suggestedPwd"></code>
+        <button id="copyBtn" aria-label="Copy suggested password">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('password');
+    const meterBar = document.getElementById('meterBar');
+    const strengthLabel = document.getElementById('strengthLabel');
+    const issuesDiv = document.getElementById('issues');
+    const suggestionsDiv = document.getElementById('suggestions');
+    const hashSection = document.getElementById('hashSection');
+    const hashValue = document.getElementById('hashValue');
+    const suggestSection = document.getElementById('suggestSection');
+    const suggestedPwd = document.getElementById('suggestedPwd');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const copyBtn = document.getElementById('copyBtn');
+
+    const colors = { 'Weak': '#e74c3c', 'Fair': '#f39c12', 'Strong': '#2ecc71', 'Very Strong': '#27ae60' };
+    const widths = { 'Weak': '25%', 'Fair': '55%', 'Strong': '80%', 'Very Strong': '100%' };
+
+    let debounceTimer;
+
+    input.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => analyze(input.value), 300);
+    });
+
+    toggleBtn.addEventListener('click', () => {
+      input.type = input.type === 'password' ? 'text' : 'password';
+    });
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(suggestedPwd.textContent).then(() => {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => copyBtn.textContent = 'Copy', 1500);
+      });
+    });
+
+    async function analyze(password) {
+      if (!password) {
+        reset(); return;
+      }
+      const res = await fetch('/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      const data = await res.json();
+
+      meterBar.style.width = widths[data.label] || '0%';
+      meterBar.style.background = colors[data.label] || '#ccc';
+      strengthLabel.textContent = data.label;
+      strengthLabel.style.color = colors[data.label] || '#333';
+
+      if (data.issues.length) {
+        issuesDiv.innerHTML = '<strong>Issues:</strong><ul>' + data.issues.map(i => `<li>${i}</li>`).join('') + '</ul>';
+        issuesDiv.classList.remove('hidden');
+      } else {
+        issuesDiv.classList.add('hidden');
+      }
+
+      if (data.suggestions.length) {
+        suggestionsDiv.innerHTML = '<strong>Suggestions:</strong><ul>' + data.suggestions.map(s => `<li>${s}</li>`).join('') + '</ul>';
+        suggestionsDiv.classList.remove('hidden');
+      } else {
+        suggestionsDiv.classList.add('hidden');
+      }
+
+      hashValue.textContent = data.hash;
+      hashSection.classList.remove('hidden');
+
+      suggestedPwd.textContent = data.suggestion;
+      suggestSection.classList.remove('hidden');
+    }
+
+    function reset() {
+      meterBar.style.width = '0%';
+      strengthLabel.textContent = '—';
+      issuesDiv.classList.add('hidden');
+      suggestionsDiv.classList.add('hidden');
+      hashSection.classList.add('hidden');
+      suggestSection.classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
